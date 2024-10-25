@@ -11,10 +11,9 @@
 
     <script>
         async function measureDownloadSpeed() {
-            // URL of a file to download (you can change it to a file you control)
-            const fileUrl = "https://example.com/testfile.jpg"; // Replace with any URL to a file of known size
-            const fileSizeInBytes = 1000000; // Replace with the actual file size in bytes
-            
+            const fileUrl = "https://raw.githubusercontent.com/mwiz123/speedtest/main/20MB.zip"; // Direct download link
+            const fileSizeInBytes = 20971520; // 20MB in bytes (20 * 1024 * 1024)
+
             const startTime = performance.now();
 
             try {
