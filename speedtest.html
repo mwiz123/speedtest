@@ -11,22 +11,33 @@
 
     <script>
         async function measureDownloadSpeed() {
-            const fileUrl = "https://raw.githubusercontent.com/mwiz123/speedtest/main/20MB.zip"; // Direct download link
+            const fileUrl = "https://raw.githubusercontent.com/mwiz123/speedtest/main/20MB.zip"; // Your file
             const fileSizeInBytes = 20971520; // 20MB in bytes (20 * 1024 * 1024)
-
             const startTime = performance.now();
 
             try {
-                // Fetch the file
-                await fetch(fileUrl, { cache: "no-store" });
+                const response = await fetch(fileUrl, { cache: "no-store" });
+                const reader = response.body.getReader();
+                let receivedLength = 0; // number of bytes received
+                let chunks = []; // array of received binary chunks (comprises the body)
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) {
+                        break;
+                    }
+                    chunks.push(value);
+                    receivedLength += value.length;
+                }
+
                 const endTime = performance.now();
 
-                // Calculate download speed
+                // Calculate the speed based on the actual bytes downloaded
                 const durationInSeconds = (endTime - startTime) / 1000;
-                const bitsLoaded = fileSizeInBytes * 8;
-                const speedBps = bitsLoaded / durationInSeconds;
-                const speedKbps = speedBps / 1024;
-                const speedMbps = speedKbps / 1024;
+                const bitsLoaded = receivedLength * 8; // convert bytes to bits
+                const speedBps = bitsLoaded / durationInSeconds; // bits per second
+                const speedKbps = speedBps / 1024; // convert to kbps
+                const speedMbps = speedKbps / 1024; // convert to Mbps
 
                 // Display the download speed
                 document.getElementById("download-speed").textContent = `${speedMbps.toFixed(2)} Mbps`;
