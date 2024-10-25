@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Test</title>
+</head>
+<body>
+    <h1>Internet Speed Test</h1>
+    <p>Download Speed: <span id="download-speed">Calculating...</span></p>
+
+    <script>
+        async function measureDownloadSpeed() {
+            // URL of a file to download (you can change it to a file you control)
+            const fileUrl = "https://example.com/testfile.jpg"; // Replace with any URL to a file of known size
+            const fileSizeInBytes = 1000000; // Replace with the actual file size in bytes
+            
+            const startTime = performance.now();
+
+            try {
+                // Fetch the file
+                await fetch(fileUrl, { cache: "no-store" });
+                const endTime = performance.now();
+
+                // Calculate download speed
+                const durationInSeconds = (endTime - startTime) / 1000;
+                const bitsLoaded = fileSizeInBytes * 8;
+                const speedBps = bitsLoaded / durationInSeconds;
+                const speedKbps = speedBps / 1024;
+                const speedMbps = speedKbps / 1024;
+
+                // Display the download speed
+                document.getElementById("download-speed").textContent = `${speedMbps.toFixed(2)} Mbps`;
+            } catch (error) {
+                document.getElementById("download-speed").textContent = "Error measuring speed.";
+                console.error(error);
+            }
+        }
+
+        measureDownloadSpeed();
+    </script>
+</body>
+</html>
